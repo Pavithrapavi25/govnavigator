@@ -4,3 +4,5 @@ google-genai
 python-dotenv
 pydantic
 sqlalchemy
+PyJWT
+pwdlib[argon2]
