@@ -1842,6 +1842,10 @@ def get_session(
 # ============================================================
 # SEARCH ANALYTICS
 # ============================================================
+  # ============================================================
+# SEARCH ANALYTICS
+# CURRENT USER ONLY
+# ============================================================
 
 @app.get("/api/analytics/search-summary")
 def get_search_analytics(
@@ -1851,13 +1855,23 @@ def get_search_analytics(
     try:
 
         # ----------------------------------------------------
+        # Base query — only current user's searches
+        # ----------------------------------------------------
+
+        user_searches = (
+            db.query(SearchHistory)
+            .filter(
+                SearchHistory.user_id == current_user.id
+            )
+        )
+
+        # ----------------------------------------------------
         # Total searches
         # ----------------------------------------------------
 
         total_searches = (
-            db.query(func.count(SearchHistory.id))
-            .scalar()
-        ) or 0
+            user_searches.count()
+        )
 
         # ----------------------------------------------------
         # Successful searches
@@ -1866,6 +1880,7 @@ def get_search_analytics(
         successful_searches = (
             db.query(func.count(SearchHistory.id))
             .filter(
+                SearchHistory.user_id == current_user.id,
                 SearchHistory.matched_service.isnot(None)
             )
             .scalar()
@@ -1876,9 +1891,12 @@ def get_search_analytics(
         # ----------------------------------------------------
 
         failed_searches = (
-            total_searches
-            - successful_searches
+            total_searches - successful_searches
         )
+
+        # Safety
+        if failed_searches < 0:
+            failed_searches = 0
 
         # ----------------------------------------------------
         # Success rate
@@ -1900,6 +1918,7 @@ def get_search_analytics(
 
         # ----------------------------------------------------
         # Average match score
+        # Only current user's successful searches
         # ----------------------------------------------------
 
         average_match_score = (
@@ -1909,7 +1928,9 @@ def get_search_analytics(
                 )
             )
             .filter(
-                SearchHistory.match_score.isnot(None)
+                SearchHistory.user_id == current_user.id,
+                SearchHistory.match_score.isnot(None),
+                SearchHistory.matched_service.isnot(None)
             )
             .scalar()
         )
@@ -1940,6 +1961,7 @@ def get_search_analytics(
                 ).label("count")
             )
             .filter(
+                SearchHistory.user_id == current_user.id,
                 SearchHistory.search_query.isnot(None)
             )
             .group_by(
@@ -1966,6 +1988,7 @@ def get_search_analytics(
                 ).label("count")
             )
             .filter(
+                SearchHistory.user_id == current_user.id,
                 SearchHistory.matched_service.isnot(None)
             )
             .group_by(
@@ -1992,6 +2015,7 @@ def get_search_analytics(
                 ).label("count")
             )
             .filter(
+                SearchHistory.user_id == current_user.id,
                 SearchHistory.selected_state.isnot(None)
             )
             .group_by(
@@ -2012,12 +2036,19 @@ def get_search_analytics(
 
         recent_searches = (
             db.query(SearchHistory)
+            .filter(
+                SearchHistory.user_id == current_user.id
+            )
             .order_by(
                 SearchHistory.created_at.desc()
             )
             .limit(10)
             .all()
         )
+
+        # ----------------------------------------------------
+        # Return analytics
+        # ----------------------------------------------------
 
         return {
 
@@ -2072,7 +2103,8 @@ def get_search_analytics(
             "recent_searches": [
 
                 {
-                    "id": record.id,
+                    "id":
+                        record.id,
 
                     "query":
                         record.search_query,
@@ -2087,7 +2119,9 @@ def get_search_analytics(
                         min(
                             record.match_score,
                             100
-                        ) if record.match_score is not None else 0,
+                        )
+                        if record.match_score is not None
+                        else 0,
 
                     "created_at":
                         record.created_at
