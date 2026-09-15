@@ -1,9 +1,4 @@
 import os
-print("DATABASE_URL EXISTS:", bool(os.getenv("DATABASE_URL")))
-print(
-    "DATABASE_URL TYPE:",
-    os.getenv("DATABASE_URL", "MISSING").split("://")[0]
-)
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
