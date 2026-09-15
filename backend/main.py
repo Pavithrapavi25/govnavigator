@@ -26,6 +26,7 @@ from schemas import (
     SearchResponse,
 )
 import re
+import time
 from datetime import datetime, timedelta, timezone
 import database as database_module
 import jwt
@@ -86,9 +87,14 @@ Base.metadata.create_all(bind=engine)
 # =========================================================
 # GEMINI CLIENT
 # =========================================================
-
 client = genai.Client(
-    api_key=GEMINI_API_KEY
+    api_key=GEMINI_API_KEY,
+    http_options=types.HttpOptions(
+        timeout=30000,
+        retry_options=types.HttpRetryOptions(
+            attempts=1
+        )
+    )
 )
 
 
@@ -2457,60 +2463,123 @@ IMPORTANT RULES:
     # ======================================================
     # CALL GEMINI
     # ======================================================
+    # ======================================================
+    # CALL GEMINI
+    # ======================================================
 
     try:
 
-        response = client.models.generate_content(
+        models_to_try = [
+            "gemini-3.8-flash",
+            "gemini-3.6-flash",
+        ]
 
-            model="gemini-3.6-flash",
+        response = None
+        last_error = None
 
-            contents=prompt,
+        for model_name in models_to_try:
 
-            config=types.GenerateContentConfig(
+            for attempt in range(3):
 
-                response_mime_type=
-                    "application/json",
+                try:
 
-                response_schema=
-                    response_schema,
+                    print(
+                        f"Gemini request: "
+                        f"model={model_name}, "
+                        f"attempt={attempt + 1}"
+                    )
 
-                temperature=0.2,
-            ),
-        )
+                    response = client.models.generate_content(
+                        model=model_name,
+                        contents=prompt,
+                        config=types.GenerateContentConfig(
+                            response_mime_type="application/json",
+                            response_schema=response_schema,
+                            temperature=0.2,
+                            thinking_config=types.ThinkingConfig(
+                                thinking_level="low"
+                            ),
+                        ),
+                    )
+
+                    if response and response.text:
+
+                        print(
+                            f"Gemini success: "
+                            f"model={model_name}"
+                        )
+
+                        break
+
+                except Exception as error:
+
+                    last_error = error
+                    error_text = str(error)
+
+                    print(
+                        f"Gemini temporary error "
+                        f"(model={model_name}, "
+                        f"attempt={attempt + 1}): "
+                        f"{error_text}"
+                    )
+
+                    is_temporary_error = (
+                        "503" in error_text
+                        or "UNAVAILABLE" in error_text
+                        or "429" in error_text
+                        or "RESOURCE_EXHAUSTED" in error_text
+                        or "408" in error_text
+                        or "500" in error_text
+                        or "502" in error_text
+                        or "504" in error_text
+                    )
+
+                    if (
+                        is_temporary_error
+                        and attempt < 2
+                    ):
+
+                        delay = 1 * (2 ** attempt)
+
+                        print(
+                            f"Retrying in {delay} seconds..."
+                        )
+
+                        time.sleep(delay)
+
+                        continue
+
+                    break
+
+            if response and response.text:
+                break
+
+        # ==================================================
+        # VERIFY RESPONSE
+        # ==================================================
+
+        if not response or not response.text:
+
+            print(
+                "Gemini failed after all attempts:",
+                last_error
+            )
+
+            raise RuntimeError(
+                "Gemini AI is temporarily unavailable. "
+                "Please try again shortly."
+            )
 
         ai_response = response.text
-
-        # ==================================================
-        # FALLBACK
-        # ==================================================
-
-        if not ai_response:
-
-            ai_response = (
-                '{"related_to_government_service":false,'
-                '"service_name":"",'
-                '"recommendation":"Sorry, I could not generate a response.",'
-                '"why":"The AI did not return a response.",'
-                '"documents":[],' 
-                '"steps":[],' 
-                '"important_note":"Please try again.",'
-                '"disclaimer":"GovNavigator is an independent prototype."}'
-            )
 
         # ==================================================
         # SAVE CHAT
         # ==================================================
 
         chat_record = ChatHistory(
-
-            session_id=
-                session_id,
-
-            user_message=
-                user_message,
-
-            ai_response=
-                ai_response
+            session_id=session_id,
+            user_message=user_message,
+            ai_response=ai_response
         )
 
         db.add(chat_record)
@@ -2526,15 +2595,9 @@ IMPORTANT RULES:
         # ==================================================
 
         return {
-
-            "response":
-                ai_response,
-
-            "session_id":
-                session_id,
-
-            "chat_id":
-                chat_record.id
+            "response": ai_response,
+            "session_id": session_id,
+            "chat_id": chat_record.id
         }
 
     except Exception as error:
@@ -2549,24 +2612,17 @@ IMPORTANT RULES:
         error_response = (
             '{"related_to_government_service":false,'
             '"service_name":"",'
-            '"recommendation":"Sorry, I could not process your request.",'
-            '"why":"The AI service returned an error.",'
-            '"documents":[],' 
-            '"steps":[],' 
-            '"important_note":"Please try again later.",'
+            '"recommendation":"The AI assistant is temporarily unavailable. Please try again shortly.",'
+            '"why":"The Gemini AI service is currently busy or unavailable.",'
+            '"documents":[],"steps":[],'
+            '"important_note":"Your other GovNavigator features are still available.",'
             '"disclaimer":"GovNavigator is an independent prototype."}'
         )
 
         return {
-
-            "response":
-                error_response,
-
-            "session_id":
-                session_id
+            "response": error_response,
+            "session_id": session_id
         }
-
-
 # =========================================================
 # CREATE / UPDATE USER SESSION
 # =========================================================
