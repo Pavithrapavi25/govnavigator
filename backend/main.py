@@ -241,7 +241,7 @@ def home():
         "status": "online",
         "message": "GovNavigator AI backend is running.",
         "version": "5.2.0",
-        "database": "SQLite + SQLAlchemy"
+        "database": engine.url.get_backend_name(),
     }
 
 
@@ -349,7 +349,7 @@ def database_health(
 
         "status": "connected",
 
-        "database": "SQLite",
+        "database": engine.url.get_backend_name(),
 
         "chat_history_records":
             chat_count,
