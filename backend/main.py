@@ -366,6 +366,18 @@ def database_health(
         "user_sessions":
             session_count
     }
+@app.get("/api/debug/database-config")
+def debug_database_config():
+    database_url = os.getenv("DATABASE_URL")
+
+    return {
+        "database_url_exists": bool(database_url),
+        "database_type": (
+            database_url.split("://")[0]
+            if database_url
+            else "MISSING"
+        ),
+    }
 
 
 # =========================================================
