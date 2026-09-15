@@ -1,16 +1,15 @@
+
+import os
+from dotenv import load_dotenv
+load_dotenv()
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from dotenv import load_dotenv
-
 from google import genai
 from google.genai import types
-
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
-
 from database import engine, SessionLocal, Base
-
 from models import (
     State,
     Service,
@@ -20,29 +19,21 @@ from models import (
     User,
     FavoriteService,
 )
-
 from schemas import (
     StateResponse,
     ServiceResponse,
     SearchRequest,
     SearchResponse,
 )
-
-import os
 import re
 from datetime import datetime, timedelta, timezone
 import database as database_module
 import jwt
 from pwdlib import PasswordHash
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-
-
 # =========================================================
 # ENVIRONMENT
 # =========================================================
-
-load_dotenv()
-
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 if not GEMINI_API_KEY:
