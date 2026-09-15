@@ -363,36 +363,6 @@ def database_health(
         "user_sessions":
             session_count
     }
-@app.get("/api/debug/database-config")
-def debug_database_config():
-    database_url = os.getenv("DATABASE_URL")
-
-    return {
-        "database_url_exists": bool(database_url),
-        "database_type": (
-            database_url.split("://")[0]
-            if database_url
-            else "MISSING"
-        ),
-    }
-@app.get("/api/debug/database-engine")
-def debug_database_engine():
-    return {
-        "database_module": database_module.__file__,
-        "database_variable_is_postgresql": (
-            database_module.DATABASE_URL.startswith("postgresql://")
-            or database_module.DATABASE_URL.startswith("postgres://")
-        ),
-        "database_variable_type": (
-            database_module.DATABASE_URL.split("://")[0]
-            if database_module.DATABASE_URL
-            else "MISSING"
-        ),
-        "engine_backend": engine.url.get_backend_name(),
-        "engine_driver": engine.url.drivername,
-    }
-
-
 # =========================================================
 # AUTH — REGISTER
 # =========================================================

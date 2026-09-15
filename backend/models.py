@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, UniqueConstraint
+
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, UniqueConstraint, Index
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from database import Base
@@ -66,6 +67,9 @@ class State(Base):
 
 class Service(Base):
     __tablename__ = "services"
+    __table_args__ = (
+        Index("ix_services_name_state_id", "name", "state_id"),
+    )
 
     id = Column(
         Integer,

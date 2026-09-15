@@ -1,10 +1,8 @@
+
 import json
 from collections import Counter
-
 from database import SessionLocal
 from models import FavoriteService, Service
-
-
 # ============================================================
 # GOVNAVIGATOR — COMPLETE SERVICE LINK SEEDER
 # ============================================================
@@ -19,11 +17,7 @@ from models import FavoriteService, Service
 # - National services use the official national government portal.
 # - No fabricated deep links are generated.
 # ============================================================
-
-
-
 SERVICES = [
-
     # ========================================================
     # EXISTING SERVICES
     # These are included so the seeder can safely recognize
