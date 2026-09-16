@@ -1,183 +1,358 @@
 # 🇮🇳 GovNavigator
 
-### AI-Powered Indian Government Service Navigator
+### AI-Assisted Indian Government Service Navigator
 
-GovNavigator is a full-stack web application that helps citizens discover and understand Indian government services, certificates, documents, schemes, eligibility requirements, and application procedures.
+[![React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react\&logoColor=white)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Build-Vite-646CFF?logo=vite\&logoColor=white)](https://vitejs.dev/)
+[![Python](https://img.shields.io/badge/Backend-Python-3776AB?logo=python\&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi\&logoColor=white)](https://fastapi.tiangolo.com/)
+[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-4169E1?logo=postgresql\&logoColor=white)](https://www.postgresql.org/)
+[![SQLAlchemy](https://img.shields.io/badge/ORM-SQLAlchemy-D71F00)](https://www.sqlalchemy.org/)
+[![JWT](https://img.shields.io/badge/Auth-JWT-000000?logo=jsonwebtokens\&logoColor=white)](https://jwt.io/)
+[![Gemini](https://img.shields.io/badge/AI-Google%20Gemini-4285F4?logo=google\&logoColor=white)](https://ai.google.dev/)
+[![Render](https://img.shields.io/badge/Deployed-Render-46E3B7?logo=render\&logoColor=white)](https://render.com/)
+[![GitHub](https://img.shields.io/badge/Source-GitHub-181717?logo=github\&logoColor=white)](https://github.com/)
 
-Instead of searching through multiple government websites, users can search for a service, select their state/UT, view relevant information, save important services, track their searches, and get AI-powered guidance.
-
-> **Note:** GovNavigator is an independent prototype and is not affiliated with or operated by any Indian government department.
+> GovNavigator is an independent full-stack prototype that helps users discover and explore Indian government-service information through search, service details, saved services, search history, analytics, official-portal links, and AI-assisted guidance.
 
 ---
 
-## 🌟 Features
+## 🌟 Overview
 
-### 🔎 Intelligent Government Service Search
-
-* Natural-language search
-* Exact service-name matching
-* Keyword and phrase matching
-* Search intent detection
-* Synonym-based matching
-* Relevance scoring
-* State/UT filtering
-* Top relevant results
-
-### 🏛️ Government Service Coverage
-
-* 36 States and Union Territories
-* 22 major government-service categories
-* 792 state/service records
-* Official portal URLs for all service records
-* 46 unique official government portals
-
-### 🤖 AI Government Guidance
-
-GovNavigator AI can help users understand:
-
-* Which government service they may need
-* Why the service may be relevant
-* Common documents
-* General application steps
-* Important considerations
-
-The AI is designed to avoid inventing government services, official URLs, fees, deadlines, or legal requirements.
-
-### ⭐ Favorites
+GovNavigator was built to make government-service discovery easier by bringing several common tasks into one interface.
 
 Users can:
 
-* Save useful government services
-* View saved services
-* Remove services from favorites
+* Select a State or Union Territory
+* Search for a government service using keywords or natural-language queries
+* View service information such as eligibility, documents, steps, fees, and processing information when available in the dataset
+* Save services to favorites
+* Review search history
+* View search analytics
+* Open an associated official government portal
+* Ask the AI assistant for general service guidance
 
-### 🕘 Search History
-
-Users can:
-
-* View previous searches
-* See matched services
-* See match scores
-* Delete individual history items
-* Clear search history
-
-### 📊 Search Analytics
-
-The application provides:
-
-* Total searches
-* Successful searches
-* Failed searches
-* Search success rate
-* Average match score
-* Top queries
-* Top services
-* Top states
-* Recent searches
-
-### 🔐 Authentication
-
-* User registration
-* Secure login
-* Password hashing with Argon2
-* JWT-based authentication
-* Protected user-specific features
-
-### 🗄️ Production Database
-
-* PostgreSQL
-* SQLAlchemy ORM
-* Neon PostgreSQL for cloud deployment
-* Indexed service lookup for improved performance
-
-### 🌐 Responsive Web Application
-
-Designed for desktop and mobile-friendly use.
+GovNavigator is an **independent prototype** and is not affiliated with or endorsed by any government department.
 
 ---
 
-## 🧩 Application Flow
-
-```text
-User
-  │
-  ▼
-Register / Login
-  │
-  ▼
-Select State / UT
-  │
-  ▼
-Search Government Service
-  │
-  ▼
-Intelligent Matching
-  │
-  ├── Service Details
-  ├── Eligibility
-  ├── Documents
-  ├── Steps
-  └── Official Portal
-  │
-  ├── Favorite
-  ├── Search History
-  └── Analytics
-  │
-  ▼
-AI Government Guidance
-```
-
----
-
-## 🛠️ Tech Stack
+# 🚀 Live Application
 
 ### Frontend
 
-* React
-* Vite
-* JavaScript
-* Axios
-* CSS
+https://govnavigator.onrender.com
 
-### Backend
+### Backend API
 
-* Python
-* FastAPI
-* SQLAlchemy
-* PyJWT
-* pwdlib
-* Argon2
-* Google Gemini API
+https://govnavigator-backend.onrender.com
 
-### Database
+### Backend Health Endpoint
 
-* PostgreSQL
-* Neon PostgreSQL
+```text
+GET /
+```
 
-### Deployment
-
-* Render
-* GitHub
+The deployed backend currently returns a health response indicating that the API is online and connected to PostgreSQL.
 
 ---
 
-## 🏗️ Architecture
+# 🔎 Intelligent Search
+
+The search implementation combines several matching techniques, including:
+
+* Exact service-name matching
+* Phrase matching
+* Service-name word matching
+* Category matching
+* Description-based matching
+* Search synonyms
+* Intent detection
+* Relevance scoring
+* State-based filtering
+
+For example:
 
 ```text
-React + Vite Frontend
-        │
-        │ HTTP / REST API
-        ▼
-FastAPI Backend
-        │
-        ├──────────────► PostgreSQL / Neon
-        │
-        └──────────────► Gemini API
+"I need proof of my family income"
+```
+
+can return:
+
+```text
+Income Certificate
+```
+
+with a relevance score.
+
+The search implementation is designed to handle both direct service names and more natural descriptions of a user's need.
+
+---
+
+# 🏛️ Service Dataset
+
+The current seeded dataset contains:
+
+```text
+36 States / Union Territories
+22 Service Categories
+792 State/Service Records
+792 Records with Official Portal URLs
+46 Unique Portal URLs
+```
+
+The database was checked after seeding and the resulting audit reported:
+
+```text
+792 target records
+792 records with URLs
+0 extra service rows
+36 records per state/UT
+36 records per service category
+```
+
+The dataset is intended to provide a structured starting point for the prototype. Government information can change, so users should verify current requirements on the relevant official portal.
+
+---
+
+# 🤖 AI-Assisted Guidance
+
+GovNavigator integrates the Google Gemini API for AI-assisted responses.
+
+The AI response is structured around fields such as:
+
+```text
+Service Name
+Recommendation
+Why
+Documents
+Steps
+Important Note
+Disclaimer
+```
+
+The prompt instructs the model to:
+
+* Identify whether a question is related to an Indian government service
+* Avoid recommending unrelated government services
+* Avoid inventing official URLs, fees, deadlines, or legal requirements
+* Remind users that requirements may vary and should be verified
+
+The AI feature is intended as a guidance layer, not as an authoritative government source.
+
+---
+
+# 🔐 Authentication
+
+The backend includes authenticated user functionality using:
+
+* User registration
+* Login
+* JWT-based authentication
+* Password hashing with Argon2
+* Protected user-specific endpoints
+
+Authentication is used for features such as:
+
+```text
+Favorites
+Search History
+Analytics
+AI Sessions
 ```
 
 ---
 
-## 📁 Project Structure
+# ⭐ Favorites
+
+Authenticated users can:
+
+```text
+Add a service to favorites
+View saved services
+Check favorite status
+Remove a service from favorites
+```
+
+Favorites are stored in the PostgreSQL database and associated with the authenticated user.
+
+---
+
+# 🕘 Search History
+
+Authenticated users can:
+
+```text
+View previous searches
+View the matched service
+View match scores
+Delete individual history records
+Clear search history
+View recent searches
+```
+
+Search records are stored in PostgreSQL.
+
+---
+
+# 📊 Search Analytics
+
+The analytics API calculates user-level search information including:
+
+```text
+Total Searches
+Successful Searches
+Failed Searches
+Success Rate
+Average Match Score
+Top Queries
+Top Services
+Top States
+Recent Searches
+```
+
+The implementation uses SQL aggregation, filtering, grouping, ordering, and user-specific queries.
+
+---
+
+# 🏗️ Architecture
+
+```text
+                         ┌───────────────────────┐
+                         │         User          │
+                         └───────────┬───────────┘
+                                     │
+                                     ▼
+                         ┌───────────────────────┐
+                         │   React + Vite UI     │
+                         │      JavaScript       │
+                         └───────────┬───────────┘
+                                     │
+                                  REST API
+                                     │
+                                     ▼
+                         ┌───────────────────────┐
+                         │    FastAPI Backend    │
+                         │        Python         │
+                         └─────────┬─────┬───────┘
+                                   │     │
+                         ┌─────────┘     └──────────┐
+                         ▼                          ▼
+                ┌──────────────────┐       ┌──────────────────┐
+                │   PostgreSQL     │       │   Gemini API     │
+                │   Neon Database  │       │ AI Assistance    │
+                └──────────────────┘       └──────────────────┘
+```
+
+---
+
+# 🔄 Application Flow
+
+```text
+Register / Login
+       │
+       ▼
+Select State / UT
+       │
+       ▼
+Search Service
+       │
+       ▼
+Ranked Results
+       │
+       ├──────────────► Service Details
+       │
+       ├──────────────► Favorite
+       │
+       ├──────────────► Search History
+       │
+       ├──────────────► Analytics
+       │
+       └──────────────► Official Portal
+                             
+                         AI Guidance
+
+
+```
+
+---
+
+# 🖼️ Screenshots
+
+The following screenshots show the main user flows and features of GovNavigator.
+
+### 🔐 Authentication
+
+| Login                                | Register                                   |
+| ------------------------------------ | ------------------------------------------ |
+| ![Login](docs/screenshots/login.png) | ![Register](docs/screenshots/register.png) |
+
+### 📊 Dashboard
+
+| Dashboard Overview                            | Dashboard Details                                     |
+| --------------------------------------------- | ----------------------------------------------------- |
+| ![Dashboard](docs/screenshots/dashboard1.png) | ![Dashboard Details](docs/screenshots/dashboard2.png) |
+
+![Dashboard Additional View](docs/screenshots/dashboard3.png)
+
+### 🤖 AI Assistant
+
+| AI Assistant                                       | Ask AI — View 1                         |
+| -------------------------------------------------- | --------------------------------------- |
+| ![AI Assistant](docs/screenshots/ai_assistant.png) | ![Ask AI](docs/screenshots/ask_ai1.png) |
+
+![Ask AI Additional View](docs/screenshots/ask_ai2.png)
+
+### 🔎 Find My Service
+
+| Service Search                                       | Search Results                                                |
+| ---------------------------------------------------- | ------------------------------------------------------------- |
+| ![Find My Service](docs/screenshots/findservice.png) | ![Find My Service Results](docs/screenshots/findservice2.png) |
+
+### 📈 Search Analytics & History
+
+| Search Analytics                                           | Search History                                         |
+| ---------------------------------------------------------- | ------------------------------------------------------ |
+| ![Search Analytics](docs/screenshots/search_analytics.png) | ![Search History](docs/screenshots/search_history.png) |
+
+### ⭐ Saved Services
+
+![Saved Services](docs/screenshots/saved_services.png)
+
+# 🛠️ Technology Stack
+
+## Frontend
+
+| Technology | Role                          |
+| ---------- | ----------------------------- |
+| React      | User interface                |
+| Vite       | Development and build tooling |
+| JavaScript | Frontend logic                |
+| Axios      | HTTP/API communication        |
+| CSS        | Styling and layout            |
+
+## Backend
+
+| Technology        | Role                    |
+| ----------------- | ----------------------- |
+| Python            | Backend programming     |
+| FastAPI           | REST API                |
+| SQLAlchemy        | ORM and database access |
+| PyJWT             | JWT authentication      |
+| pwdlib + Argon2   | Password hashing        |
+| Google Gemini API | AI-assisted guidance    |
+
+## Database & Deployment
+
+| Technology | Role                |
+| ---------- | ------------------- |
+| PostgreSQL | Relational database |
+| Neon       | Hosted PostgreSQL   |
+| Render     | Application hosting |
+| GitHub     | Source control      |
+
+---
+
+# 📁 Project Structure
 
 ```text
 govnavigator/
@@ -198,52 +373,25 @@ govnavigator/
 │   ├── package.json
 │   └── ...
 │
+├── docs/
+│   └── screenshots/
+│
 ├── .gitignore
-├── README.md
-└── ...
+└── README.md
 ```
 
 ---
 
-## 🚀 Live Demo
+# 💻 Local Setup
 
-### Frontend
-
-https://govnavigator.onrender.com
-
-### Backend API
-
-https://govnavigator-backend.onrender.com
-
-### API Health Check
-
-```text
-https://govnavigator-backend.onrender.com/
-```
-
-Expected response:
-
-```json
-{
-  "status": "online",
-  "message": "GovNavigator AI backend is running.",
-  "version": "5.2.0",
-  "database": "postgresql"
-}
-```
-
----
-
-## 💻 Local Setup
-
-### 1. Clone the repository
+## 1. Clone the repository
 
 ```bash
 git clone https://github.com/Pavithrapavi25/govnavigator.git
 cd govnavigator
 ```
 
-### 2. Backend setup
+## 2. Backend setup
 
 ```powershell
 cd backend
@@ -252,7 +400,7 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-### 3. Configure environment variables
+## 3. Environment variables
 
 Create:
 
@@ -270,23 +418,21 @@ APP_ENV=development
 FRONTEND_URL=http://localhost:5173
 ```
 
-Never commit real API keys, passwords, JWT secrets, or database credentials.
+Do not commit real credentials or API keys.
 
-### 4. Start the backend
+## 4. Start the backend
 
 ```powershell
 uvicorn main:app --reload
 ```
 
-Backend:
+Default local backend:
 
 ```text
 http://127.0.0.1:8000
 ```
 
-### 5. Frontend setup
-
-Open another terminal:
+## 5. Start the frontend
 
 ```powershell
 cd frontend
@@ -294,7 +440,7 @@ npm install
 npm run dev
 ```
 
-Frontend:
+Default local frontend:
 
 ```text
 http://localhost:5173
@@ -302,126 +448,199 @@ http://localhost:5173
 
 ---
 
-## 🗃️ Service Data Seeding
+# 🗃️ Database Seeding
 
-GovNavigator uses a dedicated service seeding script.
+The project includes scripts for preparing the database:
 
 ```powershell
 cd backend
+
 python seed_data.py
+
 python seed_services.py
 ```
 
-The production dataset is validated to contain:
-
-```text
-36 States/UTs
-22 Services
-792 State/Service Records
-792 Records with Official URLs
-0 Extra Service Records
-```
+The service seeder includes reconciliation and audit logic for the expected service dataset.
 
 ---
 
-## 🔐 Security
+# 🔧 Engineering Work
 
-GovNavigator follows several security practices:
+The project involved practical debugging and implementation work across the full stack, including:
 
-* Passwords are hashed using Argon2
-* JWT authentication protects user-specific APIs
-* Sensitive credentials are stored through environment variables
-* API keys are not stored in source code
-* User-specific favorites and search history require authentication
-* Production database credentials are not committed to GitHub
+* PostgreSQL configuration
+* Local versus hosted database configuration
+* Render deployment configuration
+* JWT authentication
+* Password hashing
+* Service-data seeding
+* Search relevance logic
+* Database indexing
+* AI API integration
+* AI error handling
+* Production debugging
+
+The service seeding process was also optimized so existing service records can be loaded once and matched in memory rather than performing a separate database lookup for every state/service combination.
 
 ---
 
-## 🧪 Validation
+# 🧪 Verification Performed
 
-The application has been tested across the major user workflow:
+The following areas were tested during development and deployment:
 
 ```text
 Registration
-      ↓
 Login
-      ↓
 Service Search
-      ↓
 Service Details
-      ↓
-Favorite
-      ↓
+Favorites
 Search History
-      ↓
-Analytics
-      ↓
-Official Government Portal
-      ↓
-AI Guidance
+Search Analytics
+Official Portal Links
+AI Assistant
 ```
 
-The production database audit confirms:
+The database audit reported:
 
 ```text
-36/36 States and UTs ........ PASS
-22/22 Services ............. PASS
-792/792 Records ............ PASS
-792/792 URLs ............... PASS
-0 Extra Records ............ PASS
+36 / 36 States or UTs
+22 / 22 Service Categories
+792 / 792 Target Records
+792 / 792 Records with URLs
+0 Extra Service Rows
 ```
+
+These results reflect the database and application checks performed during development; government portal availability and third-party AI availability can change independently.
 
 ---
 
-## ⚠️ Important Disclaimer
+# 🎯 Skills Demonstrated
 
-GovNavigator is an independent educational/prototype application.
+### Programming
 
-Government services, requirements, fees, processing times, eligibility rules, and application procedures may change. Users should always verify the latest information through the relevant official government authority or portal before submitting an application.
+* Python
+* JavaScript
+* SQL
+
+### Backend Development
+
+* FastAPI
+* REST APIs
+* SQLAlchemy
+* Authentication
+* JWT
+* Argon2
+
+### Database
+
+* PostgreSQL
+* Relational modelling
+* Querying
+* Aggregation
+* Indexing
+* Database seeding
+
+### AI
+
+* Gemini API integration
+* Prompt design
+* Structured JSON responses
+* AI error handling
+* Response-latency tuning
+
+### Deployment
+
+* Git
+* GitHub
+* Render
+* Neon
+* Environment-variable configuration
+* Production debugging
+
+---
+
+# 🚀 Future Improvements
+
+Possible future work includes:
+
+* More service categories
+* Multilingual support
+* Regional-language AI assistance
+* Automated portal availability checks
+* Improved accessibility
+* Notifications and reminders
+* More advanced service recommendations
+* Production monitoring and observability
+
+---
+
+# ⚠️ Disclaimer
+
+GovNavigator is an independent prototype and is not affiliated with or endorsed by any Indian government department.
+
+Government service requirements, fees, eligibility criteria, documents, processing times, and procedures may change.
+
+Users should verify current information through the relevant official government authority or portal before applying.
 
 GovNavigator does not submit government applications on behalf of users.
 
 ---
 
-## 🎯 Future Improvements
+# 👩‍💻 Author
 
-Potential future enhancements include:
+## Pavithra
 
-* Better multilingual support
-* Telugu, Hindi and regional-language AI assistance
-* More government services
-* Improved government portal monitoring
-* Automated URL health checks
-* Advanced AI service recommendations
-* Notifications and reminders
-* Service comparison
-* Accessibility improvements
-* Production monitoring and observability
+**BE Graduate | AI & Data Science**
 
----
+Areas of interest:
 
-## 👩‍💻 Author
-
-**Pavithra**
-
-BE Graduate | AI & Data Science
-
-Interested in:
-
-* Data Science
-* Artificial Intelligence
-* Full-Stack Development
-* Python
-* SQL
+```text
+Artificial Intelligence
+Data Science
+Python
+SQL
+Full-Stack Development
+```
 
 ---
 
-## ⭐ Project Highlights
+# 📫 Project Links
 
-**GovNavigator demonstrates practical skills in:**
+🌐 **Live Application**
+https://govnavigator.onrender.com
 
-`React` • `FastAPI` • `Python` • `PostgreSQL` • `SQLAlchemy` • `JWT Authentication` • `REST APIs` • `AI Integration` • `Database Design` • `Search Algorithms` • `Cloud Deployment`
+⚙️ **Backend API**
+https://govnavigator-backend.onrender.com
+
+📂 **GitHub Repository**
+https://github.com/Pavithrapavi25/govnavigator
 
 ---
 
-⭐ **If you find this project useful, consider giving the repository a star.**
+## ⭐ Project Summary
+
+GovNavigator brings together:
+
+```text
+React
++
+FastAPI
++
+Python
++
+PostgreSQL
++
+SQLAlchemy
++
+JWT Authentication
++
+Search & Ranking
++
+AI Integration
++
+Analytics
++
+Cloud Deployment
+```
+
+into a single application focused on making government-service discovery easier for users.
