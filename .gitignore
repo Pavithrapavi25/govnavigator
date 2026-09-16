@@ -51,3 +51,10 @@ backend/link_test_results/
 
 # Duplicate API copy
 backend/src/services/api.js
+
+# Local backup files
+*.backup
+backend/seed_services_before_optimization.py
+backend/seed_services_neon_backup.py
+backend/seed_services_backup.py
+backend/src/
